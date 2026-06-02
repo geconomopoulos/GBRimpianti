@@ -39,11 +39,37 @@ fadeEls.forEach(el => {
     fadeObserver.observe(el);
 });
 
-// ===== ACTIVE NAV LINK =====
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.nav-links a').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-        link.classList.add('active');
-    }
-});
+// ===== MOBILE MENU =====
+const navToggle = document.querySelector('.nav-toggle');
+const primaryNavigation = document.getElementById('primary-navigation');
+
+if (navbar && navToggle && primaryNavigation) {
+    const closeMobileMenu = () => {
+        navbar.classList.remove('menu-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Apri menu');
+    };
+
+    navToggle.addEventListener('click', () => {
+        const isOpen = navbar.classList.toggle('menu-open');
+        navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', isOpen ? 'Chiudi menu' : 'Apri menu');
+    });
+
+    primaryNavigation.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) {
+            closeMobileMenu();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+}
+
